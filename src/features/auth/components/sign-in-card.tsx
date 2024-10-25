@@ -73,7 +73,7 @@ export function SignInCard() {
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Enter password address"
+                      placeholder="Enter password"
                       {...field}
                     />
                   </FormControl>
