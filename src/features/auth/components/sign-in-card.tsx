@@ -17,13 +17,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import Link from "next/link"
+import { loginSchema } from "../schemas"
+import { useLogin } from "../api/use-login"
 
-const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1, "Required"),
-})
-
-type FormData = z.infer<typeof formSchema>
+type FormData = z.infer<typeof loginSchema>
 
 export function SignInCard() {
   const form = useForm<FormData>({
@@ -31,11 +28,13 @@ export function SignInCard() {
       email: "",
       password: "",
     },
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginSchema),
   })
 
+  const { mutate } = useLogin()
+
   function onSubmit(values: FormData) {
-    console.log(values)
+    mutate({ json: values })
   }
 
   return (
