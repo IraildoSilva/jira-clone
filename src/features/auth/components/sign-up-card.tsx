@@ -1,48 +1,46 @@
-import { z } from "zod"
-import Link from "next/link"
-import { FcGoogle } from "react-icons/fc"
-import { FaGithub } from "react-icons/fa"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from 'zod'
+import Link from 'next/link'
+import { FcGoogle } from 'react-icons/fc'
+import { FaGithub } from 'react-icons/fa'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-import { DottedSeparator } from "@/components/dotted-separator"
-import { Button } from "@/components/ui/button"
+import { DottedSeparator } from '@/components/dotted-separator'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form"
+} from '@/components/ui/form'
+import { registerSchema } from '../schemas'
+import { useRegister } from '../api/use-register'
 
-const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email(),
-  password: z.string().min(8, "Minimum 8 characters required"),
-})
-
-type FormData = z.infer<typeof formSchema>
+type FormData = z.infer<typeof registerSchema>
 
 export function SignUpCard() {
   const form = useForm<FormData>({
     defaultValues: {
-      email: "",
-      password: "",
-      name: "",
+      email: '',
+      password: '',
+      name: '',
     },
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(registerSchema),
   })
 
+  const { mutate } = useRegister()
+
   function onSubmit(values: FormData) {
-    console.log(values)
+    mutate({ json: values })
   }
 
   return (
@@ -51,12 +49,12 @@ export function SignUpCard() {
         <CardTitle className="text-2xl">Sign Up</CardTitle>
 
         <CardDescription>
-          By signing up, you agree to our{" "}
-          <Link href={"/privacy"}>
+          By signing up, you agree to our{' '}
+          <Link href={'/privacy'}>
             <span className="text-blue-700">Privacy Policy</span>
-          </Link>{" "}
-          and{" "}
-          <Link href={"/terms"}>
+          </Link>{' '}
+          and{' '}
+          <Link href={'/terms'}>
             <span className="text-blue-700">Terms of Service</span>
           </Link>
         </CardDescription>
@@ -120,7 +118,7 @@ export function SignUpCard() {
               )}
             />
 
-            <Button disabled={false} size={"lg"} className="w-full">
+            <Button disabled={false} size={'lg'} className="w-full">
               Login
             </Button>
           </form>
@@ -134,8 +132,8 @@ export function SignUpCard() {
       <CardContent className="p-7 flex flex-col gap-y-4">
         <Button
           disabled={false}
-          variant={"secondary"}
-          size={"lg"}
+          variant={'secondary'}
+          size={'lg'}
           className="w-full"
         >
           <FcGoogle className="mr-2 size-5" />
@@ -144,8 +142,8 @@ export function SignUpCard() {
 
         <Button
           disabled={false}
-          variant={"secondary"}
-          size={"lg"}
+          variant={'secondary'}
+          size={'lg'}
           className="w-full"
         >
           <FaGithub className="mr-2 size-5" />
@@ -159,7 +157,7 @@ export function SignUpCard() {
 
       <CardContent className="p-7 flex items-center justify-center">
         <p>Already have an account?</p>
-        <Link href={"/sign-in"} className="text-blue-700">
+        <Link href={'/sign-in'} className="text-blue-700">
           &nbsp;Sign In
         </Link>
       </CardContent>
