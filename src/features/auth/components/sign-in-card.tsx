@@ -1,3 +1,5 @@
+"use client"
+
 import { z } from "zod"
 
 import { FcGoogle } from "react-icons/fc"
@@ -19,6 +21,7 @@ import {
 import Link from "next/link"
 import { loginSchema } from "../schemas"
 import { useLogin } from "../api/use-login"
+import { Loader } from "lucide-react"
 
 type FormData = z.infer<typeof loginSchema>
 
@@ -31,7 +34,7 @@ export function SignInCard() {
     resolver: zodResolver(loginSchema),
   })
 
-  const { mutate } = useLogin()
+  const { mutate, isPending } = useLogin()
 
   function onSubmit(values: FormData) {
     mutate({ json: values })
@@ -82,8 +85,11 @@ export function SignInCard() {
               )}
             />
 
-            <Button disabled={false} size={"lg"} className="w-full">
-              Login
+            <Button disabled={isPending} size={"lg"} className="w-full">
+              {!isPending && "Login"}
+              {isPending && (
+                <Loader className="size-4 animate-spin text-muted-foreground" />
+              )}
             </Button>
           </form>
         </Form>
@@ -95,7 +101,7 @@ export function SignInCard() {
 
       <CardContent className="p-7 flex flex-col gap-y-4">
         <Button
-          disabled={false}
+          disabled={isPending}
           variant={"secondary"}
           size={"lg"}
           className="w-full"
@@ -105,7 +111,7 @@ export function SignInCard() {
         </Button>
 
         <Button
-          disabled={false}
+          disabled={isPending}
           variant={"secondary"}
           size={"lg"}
           className="w-full"

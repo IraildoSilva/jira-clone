@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers"
 import { Account, Client } from "node-appwrite"
+
 import { AUTH_COOKIE } from "./constants"
 
 export async function getCurrent() {
@@ -14,6 +15,7 @@ export async function getCurrent() {
 
     if (!session) return null
 
+    client.setSession(session.value)
     const account = new Account(client)
 
     return await account.get()
