@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button"
+import { createAdminClient } from "@/lib/apprwrite"
 
 export default function Home() {
+  console.log(createAdminClient)
+
   return (
     <div className="">
       <Button size={"xs"}>Primary</Button>
