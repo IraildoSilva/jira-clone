@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 
 import "./globals.css"
 import { QueryProvider } from "@/components/query-provider"
+import { Toaster } from "@/components/ui/sonner"
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -24,7 +25,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn("antialiased min-h-screen", fontSans.className)}>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <Toaster />
+          {children}
+        </QueryProvider>
       </body>
     </html>
   )
