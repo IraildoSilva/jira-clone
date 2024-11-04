@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { z } from "zod"
-import { useRef } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { z } from 'zod'
+import { useRef } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -13,16 +13,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { DottedSeparator } from "@/components/dotted-separator"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+} from '@/components/ui/form'
+import { DottedSeparator } from '@/components/dotted-separator'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
-import { createWorkspaceSchema } from "../schemas"
-import { useCreateWorkspace } from "../api/use-create-workspace"
-import Image from "next/image"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { ImageIcon } from "lucide-react"
+import { createWorkspaceSchema } from '../schemas'
+import { useCreateWorkspace } from '../api/use-create-workspace'
+import Image from 'next/image'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { ImageIcon } from 'lucide-react'
 
 interface CreateWorkspaceFormProps {
   onCancel?: () => void
@@ -38,19 +38,32 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
   const form = useForm<FormData>({
     resolver: zodResolver(createWorkspaceSchema),
     defaultValues: {
-      name: "",
+      name: '',
     },
   })
 
   function onSubmit(values: FormData) {
-    mutate({ json: values })
+    const finalValues = {
+      ...values,
+      image: values.image instanceof File ? values.image : '',
+    }
+
+    mutate(
+      { form: finalValues },
+      {
+        onSuccess: () => {
+          form.reset()
+          //TODO: Redirect do new workspace
+        },
+      }
+    )
   }
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
 
     if (file) {
-      form.setValue("image", file)
+      form.setValue('image', file)
     }
   }
 
@@ -131,8 +144,8 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
                         <Button
                           type="button"
                           disabled={isPending}
-                          variant={"teritary"}
-                          size={"xs"}
+                          variant={'teritary'}
+                          size={'xs'}
                           className="w-fit mt-2"
                           onClick={() => inputRef.current?.click()}
                         >
@@ -148,14 +161,14 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
             <div className="flex items-center justify-between">
               <Button
                 type="button"
-                size={"lg"}
-                variant={"secondary"}
+                size={'lg'}
+                variant={'secondary'}
                 onClick={onCancel}
                 disabled={isPending}
               >
                 Cancel
               </Button>
-              <Button type="submit" size={"lg"} disabled={isPending}>
+              <Button type="submit" size={'lg'} disabled={isPending}>
                 Create Workspace
               </Button>
             </div>
