@@ -53,6 +53,7 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
       {
         onSuccess: () => {
           form.reset()
+          onCancel?.()
           //TODO: Redirect do new workspace
         },
       }
