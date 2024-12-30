@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils'
 import { Workspace } from '../types'
 import { useUpdateWorkspace } from '../api/use-update-workspace'
 import { useConfirm } from '@/hooks/use-confirm'
+import { useDeleteWorkspace } from '../api/use-delete-workspace'
 
 interface EditWorkspaceFormProps {
   onCancel?: () => void
@@ -41,6 +42,8 @@ export function EditWorkspaceForm({
 }: EditWorkspaceFormProps) {
   const router = useRouter()
   const { mutate, isPending } = useUpdateWorkspace()
+  const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } =
+    useDeleteWorkspace()
 
   const { ConfirmationDialog: DeleteDialog, confirm: confirmDelete } =
     useConfirm(
@@ -64,7 +67,16 @@ export function EditWorkspaceForm({
 
     if (!ok) return
 
-    console.log('deleting...')
+    deleteWorkspace(
+      {
+        param: { workspaceId: initialValues.$id },
+      },
+      {
+        onSuccess: () => {
+          window.location.href = '/'
+        },
+      }
+    )
   }
 
   function onSubmit(values: FormData) {
@@ -251,7 +263,7 @@ export function EditWorkspaceForm({
               size={'sm'}
               variant={'destructive'}
               type="button"
-              disabled={isPending}
+              disabled={isPending || isDeletingWorkspace}
               onClick={handleDelete}
             >
               Delete Workspace
