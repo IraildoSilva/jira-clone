@@ -26,6 +26,7 @@ import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Workspace } from '../types'
 import { useUpdateWorkspace } from '../api/use-update-workspace'
+import { useConfirm } from '@/hooks/use-confirm'
 
 interface EditWorkspaceFormProps {
   onCancel?: () => void
@@ -41,6 +42,13 @@ export function EditWorkspaceForm({
   const router = useRouter()
   const { mutate, isPending } = useUpdateWorkspace()
 
+  const { ConfirmationDialog: DeleteDialog, confirm: confirmDelete } =
+    useConfirm(
+      'Delete Workspace',
+      'This action cannot be undone',
+      'destructive'
+    )
+
   const inputRef = useRef<HTMLInputElement>(null)
 
   const form = useForm<FormData>({
@@ -50,6 +58,14 @@ export function EditWorkspaceForm({
       image: initialValues.imageUrl ?? '',
     },
   })
+
+  async function handleDelete() {
+    const ok = await confirmDelete()
+
+    if (!ok) return
+
+    console.log('deleting...')
+  }
 
   function onSubmit(values: FormData) {
     const finalValues = {
@@ -78,6 +94,7 @@ export function EditWorkspaceForm({
 
   return (
     <div className="flex flex-col gap-y-4">
+      <DeleteDialog />
       <Card className="h-full w-full border-none shadow-none">
         <CardHeader className="flex flex-row items-center gap-x-4 p7 space-y-0">
           <Button
@@ -235,7 +252,7 @@ export function EditWorkspaceForm({
               variant={'destructive'}
               type="button"
               disabled={isPending}
-              onClick={() => {}}
+              onClick={handleDelete}
             >
               Delete Workspace
             </Button>
