@@ -21,23 +21,23 @@ export async function getWorkspaces() {
 
     const workspaceIds = members.documents.map((member) => member.workspaceId)
 
-    const workspaces = await databases.listDocuments(
+    const workspace = await databases.listDocuments(
       DATABASE_ID,
       WORKSPACES_ID,
       [Query.orderDesc('$createdAt'), Query.contains('$id', workspaceIds)]
     )
 
-    return workspaces
+    return workspace
   } catch {
     return { documents: [], total: 0 }
   }
 }
 
-interface GetWorkspacePros {
+interface GetWorkspaceProps {
   workspaceId: string
 }
 
-export async function getWorkspace({ workspaceId }: GetWorkspacePros) {
+export async function getWorkspace({ workspaceId }: GetWorkspaceProps) {
   try {
     const { account, databases } = await createSessionClient()
 
@@ -56,6 +56,28 @@ export async function getWorkspace({ workspaceId }: GetWorkspacePros) {
     )
 
     return workspaces
+  } catch {
+    return null
+  }
+}
+
+interface GetWorkspaceInfoProps {
+  workspaceId: string
+}
+
+export async function getWorkspaceInfo({ workspaceId }: GetWorkspaceInfoProps) {
+  try {
+    const { databases } = await createSessionClient()
+
+    const workspace = await databases.getDocument<Workspace>(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId
+    )
+
+    return {
+      name: workspace.name
+    }
   } catch {
     return null
   }
