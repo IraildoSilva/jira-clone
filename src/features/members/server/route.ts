@@ -89,5 +89,55 @@ const app = new Hono()
 
     return c.json({ data: { $id: memberToDelete.$id } })
   })
+  .patch(
+    '/:memberId',
+    sessionMiddleware,
+    zValidator('json', z.object({ role: z.nativeEnum(MemberRole) })),
+    async (c) => {
+      const { memberId } = c.req.param()
+      const { role } = c.req.valid('json')
+      const databases = c.get('databases')
+      const user = c.get('user')
+
+      const memberToUpdate = await databases.getDocument(
+        DATABASE_ID,
+        MEMBERS_ID,
+        memberId
+      )
+
+      const allMembersInTheWorkspace = await databases.listDocuments(
+        DATABASE_ID,
+        MEMBERS_ID,
+        [Query.equal('workspaceId', memberToUpdate.workspaceId)]
+      )
+
+      const member = await getMember({
+        databases,
+        workspaceId: memberToUpdate.workspaceId,
+        userId: user.$id,
+      })
+
+      if (!member) {
+        return c.json({ error: 'Unauthorized' }, 401)
+      }
+
+      if (
+        member.$id !== memberToUpdate.$id &&
+        member.role !== MemberRole.ADMIN
+      ) {
+        return c.json({ error: 'Unauthorized' }, 401)
+      }
+
+      if (allMembersInTheWorkspace.total === 1) {
+        return c.json({ error: 'Cannot downgrade the only member' }, 400)
+      }
+
+      await databases.updateDocument(DATABASE_ID, MEMBERS_ID, memberId, {
+        role,
+      })
+
+      return c.json({ data: { $id: memberToUpdate.$id } })
+    }
+  )
 
 export default app
