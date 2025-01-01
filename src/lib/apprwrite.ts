@@ -11,11 +11,11 @@ export async function createSessionClient() {
 
   const session = await cookies().get(AUTH_COOKIE)
 
-  if(!session || !session.value) {
+  if (!session || !session.value) {
     throw new Error('Unauthorized')
   }
 
-  client.setSession(session.value) 
+  client.setSession(session.value)
 
   return {
     get account() {
@@ -23,7 +23,7 @@ export async function createSessionClient() {
     },
     get databases() {
       return new Databases(client)
-    }
+    },
   }
 }
 
@@ -36,6 +36,9 @@ export async function createAdminClient() {
   return {
     get account() {
       return new Account(client)
+    },
+    get users() {
+      return new Users(client)
     },
   }
 }
