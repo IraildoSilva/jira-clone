@@ -81,6 +81,10 @@ const app = new Hono()
       return c.json({ error: 'Unauthorized' }, 401)
     }
 
+    if (allMembersInTheWorkspace.total === 1) {
+      return c.json({ error: 'Cannot delete the only member' }, 400)
+    }
+
     await databases.deleteDocument(DATABASE_ID, MEMBERS_ID, memberId)
 
     return c.json({ data: { $id: memberToDelete.$id } })
