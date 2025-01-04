@@ -13,7 +13,7 @@ export function useConfirm(
   title: string,
   message: string,
   variant: ButtonProps['variant'] = 'primary'
-): { ConfirmationDialog: () => JSX.Element; confirm: () => Promise<unknown> } {
+): [ConfirmationDialog: () => JSX.Element, confirm: () => Promise<unknown>] {
   const [promise, setPromise] = useState<{
     resolve: (value: boolean) => void
   } | null>(null)
@@ -71,8 +71,5 @@ export function useConfirm(
     )
   }
 
-  return {
-    ConfirmationDialog,
-    confirm,
-  }
+  return [ConfirmationDialog, confirm]
 }

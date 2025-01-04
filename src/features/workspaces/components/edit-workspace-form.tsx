@@ -49,14 +49,13 @@ export function EditWorkspaceForm({
   const { mutate: resetInviteCode, isPending: iseResettingInviteCode } =
     useResetInviteCode()
 
-  const { ConfirmationDialog: DeleteDialog, confirm: confirmDelete } =
-    useConfirm(
-      'Delete Workspace',
-      'This action cannot be undone',
-      'destructive'
-    )
+  const [DeleteDialog, confirmDelete] = useConfirm(
+    'Delete Workspace',
+    'This action cannot be undone',
+    'destructive'
+  )
 
-  const { ConfirmationDialog: ResetDialog, confirm: confirmReset } = useConfirm(
+  const [ResetDialog, confirmReset] = useConfirm(
     'Reset invite link',
     'This will invalidate the current invite link',
     'destructive'
