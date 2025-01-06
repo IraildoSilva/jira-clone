@@ -1,12 +1,12 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { InferRequestType, InferResponseType } from "hono"
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { InferRequestType, InferResponseType } from 'hono'
 
-import { client } from "@/lib/rpc"
-import { toast } from "sonner"
+import { client } from '@/lib/rpc'
+import { toast } from 'sonner'
 
 type Route = typeof client.api.projects.$post
 
-type ResponseType = InferResponseType<Route>
+type ResponseType = InferResponseType<Route, 200>
 type RequestType = InferRequestType<Route>
 
 export function useCreateProject() {
@@ -17,17 +17,17 @@ export function useCreateProject() {
       const response = await client.api.projects.$post({ form })
 
       if (!response.ok) {
-        throw new Error("Failed to create project")
+        throw new Error('Failed to create project')
       }
 
       return await response.json()
     },
     onSuccess: () => {
-      toast.success("Project created")
-      queryClient.invalidateQueries({ queryKey: ["projects"] })
+      toast.success('Project created')
+      queryClient.invalidateQueries({ queryKey: ['projects'] })
     },
     onError: () => {
-      toast.error("Failed to create project")
+      toast.error('Failed to create project')
     },
   })
 
