@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils'
 import { Project } from '../types'
 import { useUpdateProject } from '../api/use-update-project'
 import { useConfirm } from '@/hooks/use-confirm'
+import { useDeleteProject } from '../api/use-delete-project'
 
 interface EditProjectFormProps {
   onCancel?: () => void
@@ -41,11 +42,11 @@ export function EditProjectForm({
 }: EditProjectFormProps) {
   const router = useRouter()
   const { mutate, isPending } = useUpdateProject()
-  // const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } =
-  //   useDeleteWorkspace()
+  const { mutate: deleteProject, isPending: isDeletingProject } =
+    useDeleteProject()
 
   const [DeleteDialog, confirmDelete] = useConfirm(
-    'Delete Workspace',
+    'Delete Project',
     'This action cannot be undone',
     'destructive'
   )
@@ -65,16 +66,16 @@ export function EditProjectForm({
 
     if (!ok) return
 
-    // deleteWorkspace(
-    //   {
-    //     param: { workspaceId: initialValues.$id },
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       window.location.href = '/'
-    //     },
-    //   }
-    // )
+    deleteProject(
+      {
+        param: { projectId: initialValues.$id },
+      },
+      {
+        onSuccess: () => {
+          window.location.href = `/workspaces/${initialValues.workspaceId}`
+        },
+      }
+    )
   }
 
   function onSubmit(values: FormData) {
@@ -265,7 +266,7 @@ export function EditProjectForm({
               size={'sm'}
               variant={'destructive'}
               type="button"
-              disabled={isPending}
+              disabled={isPending || isDeletingProject}
               onClick={handleDelete}
             >
               Delete Project
