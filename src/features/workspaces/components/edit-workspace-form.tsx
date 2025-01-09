@@ -93,16 +93,9 @@ export function EditWorkspaceForm({
 
     if (!ok) return
 
-    resetInviteCode(
-      {
-        param: { workspaceId: initialValues.$id },
-      },
-      {
-        onSuccess: () => {
-          router.refresh()
-        },
-      }
-    )
+    resetInviteCode({
+      param: { workspaceId: initialValues.$id },
+    })
   }
 
   function onSubmit(values: FormData) {
@@ -114,9 +107,8 @@ export function EditWorkspaceForm({
     mutate(
       { form: finalValues, param: { workspaceId: initialValues.$id } },
       {
-        onSuccess: ({ data }) => {
+        onSuccess: () => {
           form.reset()
-          router.push(`/workspaces/${data.$id}`)
         },
       }
     )
