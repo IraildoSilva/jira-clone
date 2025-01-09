@@ -26,6 +26,7 @@ import { createProjectSchema } from '../schemas'
 import { useCreateProject } from '../api/use-create-project'
 import { cn } from '@/lib/utils'
 import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id'
+import { useRouter } from 'next/navigation'
 
 interface CreateWorkspaceFormProps {
   onCancel?: () => void
@@ -35,7 +36,7 @@ type FormData = z.infer<typeof createProjectSchema>
 
 export function CreateProjectForm({ onCancel }: CreateWorkspaceFormProps) {
   const workspaceId = useWorkspaceId()
-  // const router = useRouter()
+  const router = useRouter()
   const { mutate, isPending } = useCreateProject()
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -57,9 +58,9 @@ export function CreateProjectForm({ onCancel }: CreateWorkspaceFormProps) {
     mutate(
       { form: finalValues },
       {
-        onSuccess: () => {
+        onSuccess: ({ data }) => {
           form.reset()
-          //TODO: Redirect to project screen
+          router.push(`/workspaces/${workspaceId}/projects/${data.$id}`)
         },
       }
     )
