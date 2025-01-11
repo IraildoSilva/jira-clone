@@ -9,6 +9,7 @@ import { ExternalLinkIcon, PencilIcon, TrashIcon } from 'lucide-react'
 import { useDeleteTask } from '../api/use-delete-task'
 import { useRouter } from 'next/navigation'
 import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id'
+import { useEditTaskModal } from '../hooks/use-edit-task-modal'
 
 interface TaskActionProps {
   id: string
@@ -24,6 +25,8 @@ export function TaskActions({ children, id, projectId }: TaskActionProps) {
     'This action cannot be undone.',
     'destructive'
   )
+
+  const { open } = useEditTaskModal()
 
   const { mutate, isPending } = useDeleteTask()
 
@@ -50,17 +53,26 @@ export function TaskActions({ children, id, projectId }: TaskActionProps) {
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
 
         <DropdownMenuContent className="w-48" align="end">
-          <DropdownMenuItem onClick={onOpenTask} className="font-medium p-[10px]">
+          <DropdownMenuItem
+            onClick={onOpenTask}
+            className="font-medium p-[10px]"
+          >
             <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
             Task Details
           </DropdownMenuItem>
 
-          <DropdownMenuItem onClick={onOpenProject} className="font-medium p-[10px]">
+          <DropdownMenuItem
+            onClick={onOpenProject}
+            className="font-medium p-[10px]"
+          >
             <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
             Open Project
           </DropdownMenuItem>
 
-          <DropdownMenuItem onClick={() => {}} className="font-medium p-[10px]">
+          <DropdownMenuItem
+            onClick={() => open(id)}
+            className="font-medium p-[10px]"
+          >
             <PencilIcon className="size-4 mr-2 stroke-2" />
             Edit Task
           </DropdownMenuItem>
