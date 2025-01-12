@@ -1,13 +1,16 @@
-interface TaskIdPageProps {
-	params: {
-		taskId: string
-	}
-}
+import { getCurrent } from "@/features/auth/queries"
+import { redirect } from "next/navigation"
+import { TaskIdClient } from "./client"
 
-export default function TaskIdPage({ params }: TaskIdPageProps) {
-	return (
+
+
+export default async function TaskIdPage() {
+	const user = await getCurrent()
+	if(!user) redirect('/sign-in')
+
+	return ( 
 		<div>
-			Task ID Page: {params.taskId}
+			<TaskIdClient/>
 		</div>
 	)
 }
