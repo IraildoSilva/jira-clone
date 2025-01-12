@@ -36,7 +36,7 @@ export function EventCard({
 	function onClick(event: React.MouseEvent<HTMLDivElement>) {
 		event.stopPropagation()
 
-		router.push(`workspaces/${workspaceId}/tasks/${id}`)
+		router.push(`/workspaces/${workspaceId}/tasks/${id}`)
 	}
 
   return (
