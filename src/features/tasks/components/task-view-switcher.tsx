@@ -15,6 +15,7 @@ import { columns } from './columns'
 import { DataKanban, UpdatesPayload } from './data-kanban'
 import { useCallback } from 'react'
 import { useBulkUpdateTasks } from '../api/use-bulk-update-tasks'
+import { DataCalendar } from './data-calentar'
 
 export function TaskViewSwitcher() {
   const [{ projectId, assigneeId, dueDate, status }] = useTaskFilters()
@@ -25,8 +26,7 @@ export function TaskViewSwitcher() {
   const { open } = useCreateTaskModal()
   const workspaceId = useWorkspaceId()
 
-  const { mutate: bulkUpdate } =
-    useBulkUpdateTasks()
+  const { mutate: bulkUpdate } = useBulkUpdateTasks()
 
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
     workspaceId,
@@ -88,8 +88,8 @@ export function TaskViewSwitcher() {
               />
             </TabsContent>
 
-            <TabsContent value="calendar" className="mt-0">
-              {JSON.stringify(tasks)}
+            <TabsContent value="calendar" className="mt-0 h-full pb-4">
+              <DataCalendar data={tasks?.documents ?? []} />
             </TabsContent>
           </>
         )}
