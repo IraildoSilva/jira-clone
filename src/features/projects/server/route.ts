@@ -6,7 +6,7 @@ import { zValidator } from '@hono/zod-validator'
 import { getMember } from '@/features/members/utils'
 import { sessionMiddleware } from '@/lib/session-middleware'
 
-import { DATABASE_ID, IMAGES_BUCKET_ID, PROJECTS_ID, TASKS_ID } from '@/config'
+import { DATABASE_ID, IMAGES_BUCKET_ID, PROJECTS_ID } from '@/config'
 import { createProjectSchema, updateProjectSchema } from '../schemas'
 import { Project } from '../types'
 
@@ -50,7 +50,7 @@ const app = new Hono()
 
     const project = await databases.getDocument<Project>(
       DATABASE_ID,
-      TASKS_ID,
+      PROJECTS_ID,
       projectId
     )
 
@@ -60,7 +60,7 @@ const app = new Hono()
       userId: user.$id,
     })
 
-    if(!member) {
+    if (!member) {
       return c.json({ error: 'Unauthorized' }, 401)
     }
 
