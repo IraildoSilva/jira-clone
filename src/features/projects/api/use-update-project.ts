@@ -3,7 +3,6 @@ import { InferRequestType, InferResponseType } from 'hono'
 
 import { client } from '@/lib/rpc'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
 
 type Route = (typeof client.api.projects)[':projectId']['$patch']
 
@@ -11,7 +10,6 @@ type ResponseType = InferResponseType<Route, 200>
 type RequestType = InferRequestType<Route>
 
 export function useUpdateProject() {
-  const router = useRouter()
   const queryClient = useQueryClient()
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
@@ -29,7 +27,6 @@ export function useUpdateProject() {
     },
     onSuccess: ({ data }) => {
       toast.success('Project updated')
-      router.refresh()
       queryClient.invalidateQueries({ queryKey: ['projects'] })
       queryClient.invalidateQueries({ queryKey: ['projects', data.$id] })
     },
